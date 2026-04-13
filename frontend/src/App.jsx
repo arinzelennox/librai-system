@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import { BrowserRouter, Routes, Route, useParams, useNavigate } from "react-router-dom";
 
 // ─── API CONFIG ───────────────────────────────────────────────────────────────
-const API_URL = "http://localhost:5000/api";
+const API_URL = "https://librai-backend.onrender.com/api";
 
 // ─── EMAIL CONFIRMATION HANDLER ───────────────────────────────────────────────
 function ConfirmEmailHandler() {
