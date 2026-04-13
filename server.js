@@ -11,7 +11,7 @@ const app = express();
 // ─── SECURITY MIDDLEWARE ──────────────────────────────────────────────────────
 app.use(helmet());
 app.use(cors({
-  origin: ["http://localhost:5173", "http://localhost:3000"],
+ origin: ["http://localhost:5173", "http://localhost:3000", "https://librai-system.vercel.app"],
   credentials: true,
 }));
 
