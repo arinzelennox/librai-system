@@ -414,107 +414,29 @@ function LandingPage({ T, dark, setDark, nav }) {
   );
 }
 
-// ─── WEB3FORMS CONFIG ─────────────────────────────────────────────────────────
-const WEB3FORMS_ACCESS_KEY = "93ccd46f-1e1b-49d0-a59f-2b915c2fc440";
-
-const sendConfirmationEmail = async (toEmail, toName) => {
-  try {
-    const response = await fetch("https://api.web3forms.com/submit", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        access_key: WEB3FORMS_ACCESS_KEY,
-        to: toEmail,
-        subject: "Confirm your LibrAI Account",
-        from_name: "LibrAI System",
-        message: `Hello ${toName},
-
-Welcome to LibrAI System — the AI-powered Smart Library platform!
-
-Your account has been created successfully. Please click the link below to confirm your email address and activate your account:
-
-${window.location.origin}
-
-Login credentials:
-• Email: ${toEmail}
-• Password: (the one you chose during registration)
-
-This confirmation is valid for 24 hours.
-
-If you did not create this account, please ignore this email.
-
-— The LibrAI Team
-librai.ng | Smart Library System`,
-      }),
-    });
-    const data = await response.json();
-    if (data.success) {
-      return { success: true };
-    } else {
-      throw new Error(data.message || "Failed to send email");
-    }
-  } catch (err) {
-    console.warn("Web3Forms error:", err.message);
-    return { success: false, error: err.message };
-  }
-};
-
 // ─── CONFIRM EMAIL PAGE ───────────────────────────────────────────────────────
 function ConfirmEmailPage({ T, nav, pendingEmail }) {
-  const [confirmed, setConfirmed] = useState(false);
-  const [resending, setResending] = useState(false);
-  const [resent, setResent] = useState(false);
-
-  const handleResend = async () => {
-    setResending(true);
-    await sendConfirmationEmail(pendingEmail, "Library Member");
-    setResending(false);
-    setResent(true);
-    setTimeout(() => setResent(false), 3000);
-  };
-
   return (
     <div style={{ minHeight: "100vh", background: T.bg, display: "flex", alignItems: "center", justifyContent: "center", fontFamily: "'Georgia', serif" }}>
       <div style={{ textAlign: "center", maxWidth: 500, padding: 40 }}>
-        <div style={{ width: 80, height: 80, background: confirmed ? T.greenLight : T.accentLight, borderRadius: "50%", display: "flex", alignItems: "center", justifyContent: "center", margin: "0 auto 24px", border: `2px solid ${confirmed ? T.green : "#c4652a"}` }}>
-          <Icon name={confirmed ? "check" : "mail"} size={36} />
+        <div style={{ width: 80, height: 80, background: T.accentLight, borderRadius: "50%", display: "flex", alignItems: "center", justifyContent: "center", margin: "0 auto 24px", border: "2px solid #c4652a" }}>
+          <Icon name="mail" size={36} />
         </div>
-        {!confirmed ? (
-          <>
-            <h2 style={{ fontSize: 26, fontWeight: 700, color: T.text, marginBottom: 12 }}>Check Your Email</h2>
-            <p style={{ color: T.textMuted, fontSize: 15, lineHeight: 1.7, marginBottom: 8 }}>
-              A confirmation link has been sent to:
-            </p>
-            <p style={{ color: "#c4652a", fontSize: 16, fontWeight: 600, marginBottom: 24 }}>{pendingEmail || "your email address"}</p>
-            <div style={{ background: T.bgCard, border: `1px solid ${T.border}`, borderRadius: 12, padding: "20px 24px", marginBottom: 24, textAlign: "left" }}>
-              <p style={{ fontSize: 13, color: T.textMuted, marginBottom: 10, fontWeight: 600 }}>What to expect:</p>
-              <ul style={{ fontSize: 13, color: T.textMuted, paddingLeft: 20, lineHeight: 2 }}>
-                <li>Email from <strong style={{ color: T.text }}>noreply@librai.ng</strong></li>
-                <li>Subject: <strong style={{ color: T.text }}>"Confirm your LibrAI account"</strong></li>
-                <li>Check your spam/junk folder</li>
-                <li>Link expires in <strong style={{ color: T.text }}>24 hours</strong></li>
-              </ul>
-            </div>
-            <div style={{ display: "flex", flexDirection: "column", gap: 10, marginBottom: 16 }}>
-              <button onClick={() => setConfirmed(true)} style={{ background: "#c4652a", border: "none", borderRadius: 10, padding: "12px 28px", color: "#fff", fontSize: 15, fontWeight: 600, cursor: "pointer" }}>
-                ✓ I've Confirmed My Email
-              </button>
-              <button onClick={handleResend} disabled={resending} style={{ background: "none", border: `1px solid ${T.border}`, borderRadius: 10, padding: "11px 28px", color: T.textMuted, fontSize: 14, cursor: "pointer" }}>
-                {resending ? "Sending..." : resent ? "✓ Email Resent!" : "Resend Confirmation Email"}
-              </button>
-            </div>
-            <div style={{ background: T.bgSecondary, borderRadius: 8, padding: "10px 14px", fontSize: 12, color: T.textDim, marginBottom: 16 }}>
-              💡 <strong style={{ color: T.textMuted }}>Developer note:</strong> Configure EmailJS credentials in the EMAILJS_CONFIG object at the top of App.jsx to enable real email delivery.
-            </div>
-            <button onClick={() => nav("auth")} style={{ background: "none", border: "none", color: T.textMuted, cursor: "pointer", fontSize: 14 }}>← Back to Sign In</button>
-          </>
-        ) : (
-          <>
-            <h2 style={{ fontSize: 26, fontWeight: 700, color: T.text, marginBottom: 12 }}>Email Confirmed! 🎉</h2>
-            <p style={{ color: T.textMuted, fontSize: 15, lineHeight: 1.7, marginBottom: 28 }}>Your account has been successfully verified. You can now sign in to LibrAI System.</p>
-            <button onClick={() => nav("auth")} style={{ background: "#c4652a", border: "none", borderRadius: 10, padding: "12px 32px", color: "#fff", fontSize: 15, fontWeight: 600, cursor: "pointer" }}>Sign In Now →</button>
-          </>
-        )}
+        <h2 style={{ fontSize: 26, fontWeight: 700, color: T.text, marginBottom: 12 }}>Check Your Email</h2>
+        <p style={{ color: T.textMuted, fontSize: 15, lineHeight: 1.7, marginBottom: 8 }}>A confirmation link has been sent to:</p>
+        <p style={{ color: "#c4652a", fontSize: 16, fontWeight: 600, marginBottom: 24 }}>{pendingEmail || "your email address"}</p>
+        <div style={{ background: T.bgCard, border: `1px solid ${T.border}`, borderRadius: 12, padding: "20px 24px", marginBottom: 24, textAlign: "left" }}>
+          <p style={{ fontSize: 13, color: T.textMuted, marginBottom: 10, fontWeight: 600 }}>What to expect:</p>
+          <ul style={{ fontSize: 13, color: T.textMuted, paddingLeft: 20, lineHeight: 2 }}>
+            <li>Email from <strong style={{ color: T.text }}>LibrAI System</strong></li>
+            <li>Subject: <strong style={{ color: T.text }}>"Confirm your LibrAI Account"</strong></li>
+            <li>Check your spam/junk folder</li>
+            <li>Link expires in <strong style={{ color: T.text }}>24 hours</strong></li>
+          </ul>
+        </div>
+        <button onClick={() => nav("auth")} style={{ background: "#c4652a", border: "none", borderRadius: 10, padding: "12px 28px", color: "#fff", fontSize: 15, fontWeight: 600, cursor: "pointer" }}>
+          Back to Sign In
+        </button>
       </div>
     </div>
   );
